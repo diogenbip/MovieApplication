@@ -2,8 +2,6 @@
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testappmovies.R
@@ -20,20 +18,18 @@ import kotlinx.android.synthetic.main.movie_poster.*
 
 
  class MainActivity : AppCompatActivity() {
+     private val compositeDisposable = CompositeDisposable()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val compositeDisposable = CompositeDisposable()
+
         compositeDisposable.add(
             MovieApiService.buildService().getMovieList()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe({response -> onResponse(response)}, {t -> onFailure(t) }))
-
-
     }
-
 
 
  private fun onFailure(t: Throwable) {
@@ -45,77 +41,16 @@ import kotlinx.android.synthetic.main.movie_poster.*
      rv_movies.apply {
          setHasFixedSize(true)
          layoutManager = LinearLayoutManager(this@MainActivity)
+         //список жанров
          adapter =
              GanreAdaptor(response.content1)
      }
 
  }
+
+
  }
 
- /*
-     private fun initRecyclerView() {
-         rv_movies.apply{
-             val layoutManager = LinearLayoutManager(this@MainActivity)
-             val dividerItemDecoration = DividerItemDecoration(applicationContext,VERTICAL)
-             addItemDecoration(dividerItemDecoration)
-             adaptor = MovieAdaptor()
-             adapter = adaptor
-         }
-
-     }
-
-     fun loadAPIData(){
-         val thread = Thread {
-             try {
-                 viewModel.makeApiCall()
-                 viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-                 viewModel.getRecyclerListObserver().observe(this, Observer<Movie>{
-                     if(it!=null) {
-                         adaptor.movies = it.content1
-                     }
-                     else {
-                         Log.e("TagError","false fetching data")
-                     }
-                 })
-
-             }
-             catch (e: Exception) {
-                 e.printStackTrace()
-             }
-         }
-         thread.start()
-
-     }
-
-
-     fun initRecycleView(){
-         val recyclerView = findViewById<RecyclerView>(R.id.rv_movies)
-         val layoutManager: LinearLayoutManager = GridLayoutManager(this, 2)
-         recyclerView.setLayoutManager(layoutManager)
-         val adaptor = MovieAdaptor()
-         recyclerView.setAdapter(adaptor)
-
-
-         viewModel =ViewModelProvider(this).get(MainActivityViewModel::class.java)
-         viewModel.getMoviesListObserver()!!.observe(
-             this,
-             Observer<ArrayList<Content1_Items>> { movie_models ->
-                 if (movie_models != null) {
-                     adaptor.setMovieList(movie_models)
-                 }
-             },
-         )
-
-         viewModel.makeApiCall()
-         /*viewModel = ViewModelProvider(this).get(MainActivityViewModel::class.java)
-
-         val linerLayoutManager = LinearLayoutManager(applicationContext)
-         linerLayoutManager.orientation = LinearLayoutManager.HORIZONTAL
-         rv_movies.layoutManager = linerLayoutManager
-         adaptor = MovieAdaptor()
-         adaptor.movieListData=viewModel.makeApiCall()
-         rv_movies.adapter = adaptor*/
-     }*/
 
 
 

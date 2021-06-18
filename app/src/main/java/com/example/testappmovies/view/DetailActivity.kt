@@ -8,8 +8,6 @@ import com.example.testappmovies.R
 import com.example.testappmovies.adapters.LanguageAdaptor
 import com.example.testappmovies.models.LanguagesItems
 import kotlinx.android.synthetic.main.detail_movie.*
-import java.text.SimpleDateFormat
-import java.time.format.DateTimeFormatter
 
 class DetailActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -19,10 +17,10 @@ class DetailActivity : AppCompatActivity() {
     }
 
     fun init(){
-        var intent_detail = getIntent()
-        var id = intent_detail?.getStringExtra("poster")
-        var movie_title = intent_detail?.getStringExtra("title")
-        var languages_array = ArrayList<LanguagesItems>()
+        val intent_detail = getIntent()
+        val id = intent_detail?.getStringExtra("poster")
+        val movie_title = intent_detail?.getStringExtra("title")
+        val languages_array: ArrayList<LanguagesItems>
         var created_at = intent_detail?.getStringExtra("created_at")
         languages_array = intent_detail.getSerializableExtra("languages") as ArrayList<LanguagesItems>
 

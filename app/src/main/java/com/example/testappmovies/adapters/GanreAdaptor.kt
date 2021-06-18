@@ -13,9 +13,6 @@ import kotlinx.android.synthetic.main.movie_item.view.*
 
 class GanreAdaptor(val movies: ArrayList<Content1_Items>):RecyclerView.Adapter<GanreAdaptor.MyViewHolder>(){
 
-
-
-
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val inflater = LayoutInflater.from(parent.context).inflate(R.layout.movie_item,parent,false)
         return MyViewHolder(inflater)
@@ -35,6 +32,7 @@ class GanreAdaptor(val movies: ArrayList<Content1_Items>):RecyclerView.Adapter<G
 
         fun bind(content1Items: Content1_Items) {
             ganre_title.text = content1Items.title_ganre
+            //список фильмов
             ganre_rv.apply {
                 setHasFixedSize(true)
                 layoutManager = LinearLayoutManager(context,LinearLayoutManager.HORIZONTAL,false)
@@ -44,6 +42,7 @@ class GanreAdaptor(val movies: ArrayList<Content1_Items>):RecyclerView.Adapter<G
         }
 
         override fun OnClickItemListner(view: View?,position: Int) {
+            //передача данных на detailActivity
             val intent = Intent(context,DetailActivity::class.java)
             intent.putExtra("title",movies.get(adapterPosition).content2.get(position).movie_title)
             intent.putExtra("poster",movies.get(adapterPosition).content2.get(position).cover.id)
