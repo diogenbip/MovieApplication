@@ -2,54 +2,53 @@
 
 import android.os.Bundle
 import android.util.Log
-import android.view.View
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.testappmovies.R
 import com.example.testappmovies.adapters.GanreAdaptor
 import com.example.testappmovies.models.Movie
-import com.example.testappmovies.services.MovieApiService
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.example.testappmovies.viewModel.mainActivityViewModel
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.movie_item.*
-import kotlinx.android.synthetic.main.movie_item.view.*
-import kotlinx.android.synthetic.main.movie_poster.*
 
 
  class MainActivity : AppCompatActivity() {
+     lateinit var adaptor: GanreAdaptor
+     lateinit var viewModel: mainActivityViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+        initRecyclerView()
+        getData()
 
-        val compositeDisposable = CompositeDisposable()
-        compositeDisposable.add(
-            MovieApiService.buildService().getMovieList()
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe({response -> onResponse(response)}, {t -> onFailure(t) }))
+    }
+    private fun initRecyclerView(){
 
-
+        rv_movies.apply {
+             setHasFixedSize(true)
+            adaptor = GanreAdaptor()
+             layoutManager = LinearLayoutManager(context,LinearLayoutManager.VERTICAL,false)
+             adapter =adaptor
+         }
+    }
+    private fun getData(){
+        viewModel = ViewModelProvider(this).get(mainActivityViewModel::class.java)
+        viewModel.getRLO().observe(this,object :Observer<Movie>{
+            override fun onChanged(t: Movie?) {
+                if(t!=null){
+                    adaptor.setList(t.content1)
+                    adaptor.notifyDataSetChanged()
+                }
+                else{
+                    Log.e("ErrorTAG","false data fetch")
+                }
+            }
+        })
+        viewModel.MakeAPICall()
     }
 
 
-
- private fun onFailure(t: Throwable) {
-     Log.e("Error",t.toString())
- }
-
- private fun onResponse(response: Movie) {
-
-     rv_movies.apply {
-         setHasFixedSize(true)
-         layoutManager = LinearLayoutManager(this@MainActivity)
-         adapter =
-             GanreAdaptor(response.content1)
-     }
-
- }
  }
 
  /*
