@@ -1,5 +1,6 @@
 package com.example.testappmovies.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -48,7 +49,7 @@ class MoviePosterAdaptor(val movies: ArrayList<Content2_Items>, val listner: OnC
             listner.OnClickItemListner(v,adapterPosition)
             }
             else{
-
+                Log.e("Error","Null view")
             }
         }
 
